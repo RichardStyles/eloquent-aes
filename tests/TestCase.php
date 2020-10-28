@@ -1,6 +1,6 @@
 <?php
 
-namespace RichardStyles\EloquentEncryption\Tests;
+namespace RichardStyles\EloquentAES\Tests;
 
 use RichardStyles\EloquentAES\EloquentAESServiceProvider;
 

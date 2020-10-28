@@ -1,5 +1,7 @@
 <?php
 
+namespace RichardStyles\EloquentAES\Casts;
+
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use RichardStyles\EloquentAES\EloquentAESFacade as EloquentAES;
 
