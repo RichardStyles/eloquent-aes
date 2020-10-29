@@ -17,9 +17,4 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         \Mockery::close();
     }
-
-    protected function getEnvironmentSetUp($app)
-    {
-
-    }
 }
