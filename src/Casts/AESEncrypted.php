@@ -18,6 +18,10 @@ class AESEncrypted implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
+        if (is_null($value)) {
+            return $value;
+        }
+        
         return EloquentAES::decrypt($value);
     }
 
@@ -32,6 +36,10 @@ class AESEncrypted implements CastsAttributes
      */
     public function set($model, $key, $value, $attributes)
     {
+        if (is_null($value)) {
+            return $value;
+        }
+        
         return EloquentAES::encrypt($value);
     }
 }
