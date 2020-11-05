@@ -44,4 +44,22 @@ class EncryptedCastTest extends TestCase
 
         $this->assertEquals('001100110011', $cast->set($user, 'encrypted', 'test', []));
     }
+
+    /** @test */
+    function decrypting_null_returns_null()
+    {
+        $cast = new AESEncrypted();
+        $user = new User();
+
+        $this->assertNull($cast->get($user, 'encrypted',null, []));
+    }
+
+    /** @test */
+    function encrypting_null_returns_null()
+    {
+        $cast = new AESEncrypted();
+        $user = new User();
+
+        $this->assertNull($cast->set($user, 'encrypted',null, []));
+    }
 }
