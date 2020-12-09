@@ -49,6 +49,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use RichardStyles\EloquentAES\Casts\AESEncrypted;
 use RichardStyles\EloquentAES\Casts\AESEncryptedCollection;
+use RichardStyles\EloquentAES\Casts\AESEncryptedObject;
 
 class SalesData extends Model
 {
@@ -60,6 +61,7 @@ class SalesData extends Model
     protected $casts = [
         'private_data' => AESEncrypted::class,
         'private_collection' => AESEncryptedCollection::class,
+        'private_object' => AESEncryptedObject::class,
     ];
 }
 
