@@ -14,7 +14,7 @@ class AESEncrypted implements CastsAttributes
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return array
+     * @return mixed
      */
     public function get($model, $key, $value, $attributes)
     {
