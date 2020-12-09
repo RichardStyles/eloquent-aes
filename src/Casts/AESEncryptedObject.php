@@ -13,7 +13,7 @@ class AESEncryptedObject extends AESEncrypted
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return array
+     * @return object
      */
     public function get($model, $key, $value, $attributes)
     {

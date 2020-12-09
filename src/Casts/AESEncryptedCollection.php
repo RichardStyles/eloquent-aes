@@ -14,7 +14,7 @@ class AESEncryptedCollection extends AESEncrypted
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function get($model, $key, $value, $attributes)
     {
