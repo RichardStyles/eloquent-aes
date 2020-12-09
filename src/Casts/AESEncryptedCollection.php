@@ -4,7 +4,6 @@ namespace RichardStyles\EloquentAES\Casts;
 
 use Illuminate\Database\Eloquent\JsonEncodingException;
 use Illuminate\Support\Collection;
-use RichardStyles\EloquentAES\EloquentAESFacade as EloquentAES;
 
 class AESEncryptedCollection extends AESEncrypted
 {
