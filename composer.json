@@ -3,7 +3,7 @@
     "description": "A Laravel Eloquent package to allow for model attribute encryption, using a seperate key",
     "type": "library",
     "require": {
-        "php": "^7.3"
+        "php": "^7.3|^8.0"
     },
     "license": "MIT",
     "authors": [
