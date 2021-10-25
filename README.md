@@ -3,7 +3,6 @@
 This package enables an additional layer of security when handling sensitive data. Allowing key fields of your eloquent models in the database to be encrypted at rest using AES-256-CBC. 
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/richardstyles/eloquent-aes.svg?style=flat-square)](https://packagist.org/packages/richardstyles/eloquent-aes)
-[![Build Status](https://img.shields.io/travis/richardstyles/eloquent-aes/master.svg?style=flat-square)](https://travis-ci.org/richardstyles/eloquent-aes)
 [![Quality Score](https://img.shields.io/scrutinizer/g/richardstyles/eloquent-aes.svg?style=flat-square)](https://scrutinizer-ci.com/g/richardstyles/eloquent-aes)
 [![Total Downloads](https://img.shields.io/packagist/dt/richardstyles/eloquent-aes.svg?style=flat-square)](https://packagist.org/packages/richardstyles/eloquent-aes)
 
