@@ -4,7 +4,7 @@
     "type": "library",
     "require": {
         "php": "^7.3|^8.0",
-        "illuminate/encryption" : "^8.12.0"
+        "illuminate/encryption": "^8.12.0|^9.0"
     },
     "license": "MIT",
     "authors": [
