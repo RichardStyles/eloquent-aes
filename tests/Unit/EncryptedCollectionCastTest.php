@@ -4,6 +4,7 @@
 namespace RichardStyles\EloquentAES\Tests\Unit;
 
 
+use Illuminate\Database\Eloquent\JsonEncodingException;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
@@ -60,7 +61,7 @@ class EncryptedCollectionCastTest extends TestCase
         $cast = new AESEncryptedCollection();
         $user = new User();
 
-        $this->assertNull($cast->get($user, 'encrypted',null, []));
+        $this->assertNull($cast->get($user, 'encrypted', null, []));
     }
 
     /** @test */
@@ -69,6 +70,17 @@ class EncryptedCollectionCastTest extends TestCase
         $cast = new AESEncryptedCollection();
         $user = new User();
 
-        $this->assertNull($cast->set($user, 'encrypted',null, []));
+        $this->assertNull($cast->set($user, 'encrypted', null, []));
+    }
+
+    /** @test */
+    function encrypting_an_invalid_string_throws_exception()
+    {
+        $this->expectException(JsonEncodingException::class);
+
+        $cast = new AESEncryptedCollection();
+        $user = new User();
+
+        $cast->set($user, 'encrypted', "\xB1\x31", []);
     }
 }
