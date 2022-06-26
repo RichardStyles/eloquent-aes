@@ -1,6 +1,6 @@
 # Eloquent AES
 
-This package enables an additional layer of security when handling sensitive data. Allowing key fields of your eloquent models in the database to be encrypted at rest using AES-256-CBC. 
+This package enables an additional layer of security when handling sensitive data. Allowing key fields of your eloquent models in the database to be encrypted at rest using AES-256-CBC.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/richardstyles/eloquent-aes.svg?style=flat-square)](https://packagist.org/packages/richardstyles/eloquent-aes)
 [![Quality Score](https://img.shields.io/scrutinizer/g/richardstyles/eloquent-aes.svg?style=flat-square)](https://scrutinizer-ci.com/g/richardstyles/eloquent-aes)
@@ -38,7 +38,7 @@ If you re-run this command, you will lose access to any encrypted data!
 
 ## Usage
 
-This package leverages Laravel's own [custom casting](https://laravel.com/docs/8.x/eloquent-mutators#custom-casts) to encode/decode values. 
+This package leverages Laravel's own [custom casting](https://laravel.com/docs/8.x/eloquent-mutators#custom-casts) to encode/decode values.
 
 ``` php
 <?php
@@ -47,6 +47,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use RichardStyles\EloquentAES\Casts\AESEncrypted;
+use RichardStyles\EloquentAES\Casts\AESEncryptedCollection;
+use RichardStyles\EloquentAES\Casts\AESEncryptedObject;
 
 class SalesData extends Model
 {
@@ -57,6 +59,8 @@ class SalesData extends Model
      */
     protected $casts = [
         'private_data' => AESEncrypted::class,
+        'private_collection' => AESEncryptedCollection::class,
+        'private_object' => AESEncryptedObject::class,
     ];
 }
 

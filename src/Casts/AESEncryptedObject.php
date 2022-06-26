@@ -2,10 +2,9 @@
 
 namespace RichardStyles\EloquentAES\Casts;
 
-use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use RichardStyles\EloquentAES\EloquentAESFacade as EloquentAES;
+use Illuminate\Database\Eloquent\JsonEncodingException;
 
-class AESEncrypted implements CastsAttributes
+class AESEncryptedObject extends AESEncrypted
 {
     /**
      * Cast the given value and decrypt
@@ -14,15 +13,22 @@ class AESEncrypted implements CastsAttributes
      * @param  string  $key
      * @param  mixed  $value
      * @param  array  $attributes
-     * @return mixed
+     * @return object
      */
     public function get($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return $value;
+            return null;
         }
-        
-        return EloquentAES::decrypt($value);
+
+        $decoded = parent::get($model, $key, $value, $attributes);
+
+        // The encrypter should already json-decode this, but we’ll handle it too just in case.
+        if (is_string($decoded)) {
+            $decoded = json_decode($decoded, false);
+        }
+
+        return $decoded;
     }
 
     /**
@@ -37,9 +43,15 @@ class AESEncrypted implements CastsAttributes
     public function set($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return $value;
+            return null;
         }
-        
-        return EloquentAES::encrypt($value);
+
+        $value = json_encode($value);
+
+        if ($value === false) {
+            throw JsonEncodingException::forAttribute($this, $key, json_last_error_msg());
+        }
+
+        return parent::set($model, $key, $value, $attributes);
     }
 }
