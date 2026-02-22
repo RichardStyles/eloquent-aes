@@ -9,7 +9,7 @@ beforeEach(function () {
     // Set up a current key and a previous key
     Config::set('eloquentaes.key', 'base64:J63qRTDLub5NuZvP+kb8YIorGS6qFYHKVo6u7179stY=');
     Config::set('eloquentaes.previous_keys', [
-        'base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w='
+        'base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w=',
     ]);
     Config::set('eloquentaes.cipher', 'AES-256-CBC');
 
@@ -45,7 +45,7 @@ test('decrypts data encrypted with previous key', function () {
     // Now switch to new key with old key as previous
     Config::set('eloquentaes.key', 'base64:J63qRTDLub5NuZvP+kb8YIorGS6qFYHKVo6u7179stY=');
     Config::set('eloquentaes.previous_keys', [
-        'base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w='
+        'base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w=',
     ]);
     app()->forgetInstance('eloquentaes');
 
@@ -60,14 +60,14 @@ test('previous keys work with casts', function () {
     Config::set('eloquentaes.previous_keys', []);
     app()->forgetInstance('eloquentaes');
 
-    $cast = new AESEncrypted();
-    $user = new User();
+    $cast = new AESEncrypted;
+    $user = new User;
     $encryptedValue = $cast->set($user, 'field', 'secret data', []);
 
     // Switch to new key
     Config::set('eloquentaes.key', 'base64:J63qRTDLub5NuZvP+kb8YIorGS6qFYHKVo6u7179stY=');
     Config::set('eloquentaes.previous_keys', [
-        'base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w='
+        'base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w=',
     ]);
     app()->forgetInstance('eloquentaes');
 
@@ -89,7 +89,7 @@ test('multiple previous keys are tried in order', function () {
     Config::set('eloquentaes.key', 'base64:J63qRTDLub5NuZvP+kb8YIorGS6qFYHKVo6u7179stY=');
     Config::set('eloquentaes.previous_keys', [
         'base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w=',
-        'base64:XpA5RqXNVZd7F8PwKj5BLm3fC2GhQxT1vW9Yz4nS0Ek='
+        'base64:XpA5RqXNVZd7F8PwKj5BLm3fC2GhQxT1vW9Yz4nS0Ek=',
     ]);
     app()->forgetInstance('eloquentaes');
 

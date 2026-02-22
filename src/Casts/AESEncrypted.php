@@ -21,7 +21,7 @@ class AESEncrypted implements CastsAttributes
         if (is_null($value)) {
             return $value;
         }
-        
+
         return EloquentAES::decrypt($value);
     }
 
@@ -39,7 +39,7 @@ class AESEncrypted implements CastsAttributes
         if (is_null($value)) {
             return $value;
         }
-        
+
         return EloquentAES::encrypt($value);
     }
 }

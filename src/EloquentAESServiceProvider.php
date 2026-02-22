@@ -17,7 +17,7 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/eloquentaes.php' => config_path('eloquentaes.php'),
+                __DIR__.'/../config/eloquentaes.php' => config_path('eloquentaes.php'),
             ], 'config');
 
             // Registering package commands.
@@ -33,7 +33,7 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/eloquentaes.php', 'eloquentaes');
+        $this->mergeConfigFrom(__DIR__.'/../config/eloquentaes.php', 'eloquentaes');
 
         $this->registerEncryptor();
         $this->registerOpisSecurityKey();
@@ -83,7 +83,6 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
     /**
      * Extract the encryption key from the given configuration.
      *
-     * @param  array  $config
      * @return string
      *
      * @throws \RuntimeException
@@ -93,7 +92,7 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
         return tap($config['key'], function ($key) {
             if (empty($key)) {
                 throw new MissingAppKeyException(
-                    "No eloquent encryption key has been specified."
+                    'No eloquent encryption key has been specified.'
                 );
             }
         });

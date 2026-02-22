@@ -18,7 +18,7 @@ class AESEncryptedObject extends AESEncrypted
     public function get($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return null;
+            return;
         }
 
         $decoded = parent::get($model, $key, $value, $attributes);
@@ -43,7 +43,7 @@ class AESEncryptedObject extends AESEncrypted
     public function set($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return null;
+            return;
         }
 
         $value = json_encode($value);

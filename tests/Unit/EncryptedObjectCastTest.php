@@ -23,8 +23,8 @@ test('encrypted cast decrypts values', function () {
         ->with($this->encoded)
         ->andReturn(getDecodedObject($this->plaintext));
 
-    $cast = new AESEncryptedObject();
-    $user = new User();
+    $cast = new AESEncryptedObject;
+    $user = new User;
 
     expect($cast->get($user, 'encrypted', $this->encoded, []))->toEqual(getDecodedObject($this->plaintext));
 });
@@ -34,29 +34,29 @@ test('encrypted cast encrypts values', function () {
         ->with($this->plaintext)
         ->andReturn($this->encoded);
 
-    $cast = new AESEncryptedObject();
-    $user = new User();
+    $cast = new AESEncryptedObject;
+    $user = new User;
 
     expect($cast->set($user, 'encrypted', getDecodedObject($this->plaintext), []))->toBe($this->encoded);
 });
 
 test('decrypting null returns null', function () {
-    $cast = new AESEncryptedObject();
-    $user = new User();
+    $cast = new AESEncryptedObject;
+    $user = new User;
 
     expect($cast->get($user, 'encrypted', null, []))->toBeNull();
 });
 
 test('encrypting null returns null', function () {
-    $cast = new AESEncryptedObject();
-    $user = new User();
+    $cast = new AESEncryptedObject;
+    $user = new User;
 
     expect($cast->set($user, 'encrypted', null, []))->toBeNull();
 });
 
 test('encrypting an invalid string throws exception', function () {
-    $cast = new AESEncryptedObject();
-    $user = new User();
+    $cast = new AESEncryptedObject;
+    $user = new User;
 
     $cast->set($user, 'encrypted', "\xB1\x31", []);
 })->throws(JsonEncodingException::class);

@@ -133,6 +133,20 @@ With this approach, all `encrypted` casts will automatically use the AES-256-CBC
 composer test
 ```
 
+### Code Style
+
+This package uses [Laravel Pint](https://laravel.com/docs/pint) for code style formatting.
+
+To automatically fix code style issues:
+``` bash
+composer lint
+```
+
+To check for code style issues without fixing them:
+``` bash
+composer lint-test
+```
+
 ### Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.

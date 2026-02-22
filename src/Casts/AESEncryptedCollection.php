@@ -19,7 +19,7 @@ class AESEncryptedCollection extends AESEncrypted
     public function get($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return null;
+            return;
         }
 
         return new Collection(json_decode(parent::get($model, $key, $value, $attributes)));
@@ -37,7 +37,7 @@ class AESEncryptedCollection extends AESEncrypted
     public function set($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return null;
+            return;
         }
 
         if ($value instanceof Collection) {
