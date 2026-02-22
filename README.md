@@ -8,11 +8,11 @@ This package enables an additional layer of security when handling sensitive dat
 
 ## Introduction
 
-This package allows for your Eloquent Encryption to be encrypted using a different AES-256-CBC key. This allows for your regular app:key to be [rotated](https://tighten.co/blog/app-key-and-you/). If you're looking for 4096-RSA encruption then this package [RichardStyles/EloquentEncryption](https://github.com/RichardStyles/EloquentEncryption)
+This package allows for your Eloquent Encryption to be encrypted using a different AES-256-CBC key. This allows for your regular app:key to be [rotated](https://tighten.com/blog/app-key-and-you/). If you're looking for 4096-RSA encruption then this package [RichardStyles/EloquentEncryption](https://github.com/RichardStyles/EloquentEncryption)
 
 ## Installation
 
-This package requires Laravel 8.x or higher.
+This package requires Laravel 12.x or higher.
 
 You can install the package via composer:
 
@@ -38,7 +38,7 @@ If you re-run this command, you will lose access to any encrypted data!
 
 ## Usage
 
-This package leverages Laravel's own [custom casting](https://laravel.com/docs/8.x/eloquent-mutators#custom-casts) to encode/decode values.
+This package leverages Laravel's own [custom casting](https://laravel.com/docs/12.x/eloquent-mutators#custom-casts) to encode/decode values.
 
 ``` php
 <?php
@@ -67,6 +67,45 @@ class SalesData extends Model
 ```
 
 There are additional casts which will cast the decrypted value into a specific data type. If there is not one that you need, simply make a PR including sufficient testing.
+
+### Using `encryptUsing()` for Model-Level Encryption
+
+Laravel allows you to specify which encrypter instance a model should use via the `encryptUsing()` method. This is useful when you want all encrypted attributes on a model to use the AES encrypter instead of Laravel's default encrypter:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use RichardStyles\EloquentAES\EloquentAESFacade;
+
+class User extends Model
+{
+    /**
+     * The attributes that should be encrypted.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'ssn' => 'encrypted',
+        'credit_card' => 'encrypted',
+        'address' => 'encrypted:array',
+        'preferences' => 'encrypted:collection',
+        'metadata' => 'encrypted:object',
+    ];
+
+    /**
+     * Get the encrypter instance that should be used to encrypt attributes.
+     */
+    public static function encryptUsing()
+    {
+        return EloquentAESFacade::getFacadeRoot();
+    }
+}
+```
+
+With this approach, all `encrypted` casts will automatically use the AES-256-CBC key instead of your app key. You can use Laravel's built-in `encrypted` casts without needing to specify the custom cast classes.
 
 ### Testing
 

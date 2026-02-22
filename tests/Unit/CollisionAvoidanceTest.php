@@ -1,33 +1,24 @@
 <?php
 
-namespace RichardStyles\EloquentAES\Tests\Unit;
-
-
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 use RichardStyles\EloquentAES\EloquentAESFacade as EloquentAES;
-use RichardStyles\EloquentAES\Tests\TestCase;
 
-class CollisionAvoidanceTest extends TestCase
-{
-    use WithFaker;
+uses(WithFaker::class);
 
-    /** @test */
-    function crypt_and_eloquent_aes_are_independent()
-    {
-        $aes_string = $this->faker->unique->paragraph;
-        $crypt_string = $this->faker->unique->paragraph;
-        $aes = EloquentAES::encrypt($aes_string);
-        $crypt = Crypt::encrypt($crypt_string);
+beforeEach(function () {
+    Config::set('eloquentaes.key', 'base64:4ktpIwxehZpiBCFbj59GyEU+4xAM379JdzXXyycYlSw=');
+    Config::set('app.key', 'base64:ZKLAwAK67W2X/S9mimDU5LYGInRb4im+PSsCkOZecDo=');
+});
 
-        $this->assertNotEquals(Crypt::getKey(), EloquentAES::getKey());
-        $this->assertEquals($aes_string, EloquentAES::decrypt($aes));
-        $this->assertEquals($crypt_string, Crypt::decrypt($crypt));
-    }
+test('crypt and eloquent aes are independent', function () {
+    $aes_string = fake()->unique()->paragraph;
+    $crypt_string = fake()->unique()->paragraph;
+    $aes = EloquentAES::encrypt($aes_string);
+    $crypt = Crypt::encrypt($crypt_string);
 
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']->set('eloquentaes.key', 'base64:4ktpIwxehZpiBCFbj59GyEU+4xAM379JdzXXyycYlSw=');
-        $app['config']->set('app.key', 'base64:ZKLAwAK67W2X/S9mimDU5LYGInRb4im+PSsCkOZecDo=');
-    }
-}
+    expect(EloquentAES::getKey())->not()->toBe(Crypt::getKey());
+    expect(EloquentAES::decrypt($aes))->toBe($aes_string);
+    expect(Crypt::decrypt($crypt))->toBe($crypt_string);
+});
