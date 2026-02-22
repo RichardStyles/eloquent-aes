@@ -49,7 +49,18 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
         $this->app->singleton('eloquentaes', function ($app) {
             $config = $app->make('config')->get('eloquentaes');
 
-            return new Encrypter($this->parseKey($config), $config['cipher']);
+            $encrypter = new Encrypter($this->parseKey($config), $config['cipher']);
+
+            // Register previous keys for graceful key rotation
+            if (! empty($config['previous_keys'])) {
+                $encrypter->previousKeys(
+                    collect($config['previous_keys'])
+                        ->map(fn ($key) => $this->parseKey(['key' => $key]))
+                        ->all()
+                );
+            }
+
+            return $encrypter;
         });
     }
 

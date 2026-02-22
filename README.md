@@ -35,6 +35,26 @@ php artisan key:eloquent
 ### ⚠️ Please don't forget to back up your eloquent key
 If you re-run this command, you will lose access to any encrypted data!
 
+## Graceful Key Rotation
+
+Laravel 11+ introduced graceful encryption key rotation, and this package extends that feature! When rotating your encryption key, you can specify your previous keys to maintain access to data encrypted with old keys.
+
+### Setting Up Previous Keys
+
+Add your previous encryption keys to your `.env` file as a comma-separated list:
+
+```env
+ELOQUENT_KEY="base64:J63qRTDLub5NuZvP+kb8YIorGS6qFYHKVo6u7179stY="
+ELOQUENT_PREVIOUS_KEYS="base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w=,base64:oldkey123..."
+```
+
+### How It Works
+
+- **Encryption**: Always uses the current `ELOQUENT_KEY`
+- **Decryption**: Tries the current key first, then falls back to previous keys in order
+- **No Downtime**: Users can access data encrypted with any key during rotation
+
+This allows you to rotate your encryption keys without disrupting your users or losing access to encrypted data!
 
 ## Usage
 
