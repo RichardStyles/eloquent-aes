@@ -5,6 +5,9 @@ namespace RichardStyles\EloquentAES\Casts;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use RichardStyles\EloquentAES\EloquentAESFacade as EloquentAES;
 
+/**
+ * @implements CastsAttributes<mixed, mixed>
+ */
 class AESEncrypted implements CastsAttributes
 {
     /**
@@ -13,7 +16,7 @@ class AESEncrypted implements CastsAttributes
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  string  $key
      * @param  mixed  $value
-     * @param  array  $attributes
+     * @param  array<string, mixed>  $attributes
      * @return mixed
      */
     public function get($model, $key, $value, $attributes)
@@ -21,7 +24,7 @@ class AESEncrypted implements CastsAttributes
         if (is_null($value)) {
             return $value;
         }
-        
+
         return EloquentAES::decrypt($value);
     }
 
@@ -31,15 +34,15 @@ class AESEncrypted implements CastsAttributes
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  string  $key
      * @param  mixed  $value
-     * @param  array  $attributes
-     * @return string
+     * @param  array<string, mixed>  $attributes
+     * @return string|null
      */
     public function set($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return $value;
+            return null;
         }
-        
+
         return EloquentAES::encrypt($value);
     }
 }

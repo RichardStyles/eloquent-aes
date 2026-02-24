@@ -1,15 +1,15 @@
 <?php
+
 namespace RichardStyles\EloquentAES\Command;
 
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use Illuminate\Encryption\Encrypter;
-use Illuminate\Support\Str;
-
 
 class KeyGenerateCommand extends Command
 {
     use ConfirmableTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -36,7 +36,9 @@ class KeyGenerateCommand extends Command
         $key = $this->generateRandomKey();
 
         if ($this->option('show')) {
-            return $this->line('<comment>'.$key.'</comment>');
+            $this->line('<comment>'.$key.'</comment>');
+
+            return;
         }
 
         // Next, we will replace the application key in the environment file so it is
@@ -59,8 +61,8 @@ class KeyGenerateCommand extends Command
     protected function generateRandomKey()
     {
         return 'base64:'.base64_encode(
-                Encrypter::generateKey($this->laravel['config']['eloquentaes.cipher'])
-            );
+            Encrypter::generateKey($this->laravel['config']['eloquentaes.cipher'])
+        );
     }
 
     /**
@@ -82,9 +84,9 @@ class KeyGenerateCommand extends Command
         return true;
     }
 
-    protected function environmentFileWithExists()
+    protected function environmentFileWithExists(): bool
     {
-        return preg_match(
+        return (bool) preg_match(
             $this->keyReplacementPattern(),
             file_get_contents($this->laravel->environmentFilePath())
         );
@@ -98,19 +100,19 @@ class KeyGenerateCommand extends Command
      */
     protected function writeNewEnvironmentFileWith($key)
     {
-        if($this->environmentFileWithExists()) {
+        if ($this->environmentFileWithExists()) {
             file_put_contents($this->laravel->environmentFilePath(), preg_replace(
                 $this->keyReplacementPattern(),
-                'ELOQUENT_KEY=' . $key,
+                'ELOQUENT_KEY='.$key,
                 file_get_contents($this->laravel->environmentFilePath())
             ));
 
             return;
         }
         file_put_contents($this->laravel->environmentFilePath(),
-            file_get_contents($this->laravel->environmentFilePath()) . PHP_EOL .
-            '# You should backup this key in a safe secure place' . PHP_EOL .
-            'ELOQUENT_KEY=' . $key . PHP_EOL
+            file_get_contents($this->laravel->environmentFilePath()).PHP_EOL.
+            '# You should backup this key in a safe secure place'.PHP_EOL.
+            'ELOQUENT_KEY='.$key.PHP_EOL
         );
     }
 

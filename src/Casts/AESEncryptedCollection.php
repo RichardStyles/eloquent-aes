@@ -13,8 +13,8 @@ class AESEncryptedCollection extends AESEncrypted
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  string  $key
      * @param  mixed  $value
-     * @param  array  $attributes
-     * @return \Illuminate\Support\Collection
+     * @param  array<string, mixed>  $attributes
+     * @return \Illuminate\Support\Collection<int, mixed>|null
      */
     public function get($model, $key, $value, $attributes)
     {
@@ -31,8 +31,8 @@ class AESEncryptedCollection extends AESEncrypted
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  string  $key
      * @param  mixed  $value
-     * @param  array  $attributes
-     * @return string
+     * @param  array<string, mixed>  $attributes
+     * @return string|null
      */
     public function set($model, $key, $value, $attributes)
     {

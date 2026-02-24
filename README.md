@@ -8,11 +8,11 @@ This package enables an additional layer of security when handling sensitive dat
 
 ## Introduction
 
-This package allows for your Eloquent Encryption to be encrypted using a different AES-256-CBC key. This allows for your regular app:key to be [rotated](https://tighten.co/blog/app-key-and-you/). If you're looking for 4096-RSA encruption then this package [RichardStyles/EloquentEncryption](https://github.com/RichardStyles/EloquentEncryption)
+This package allows for your Eloquent Encryption to be encrypted using a different AES-256-CBC key. This allows for your regular app:key to be [rotated](https://tighten.com/blog/app-key-and-you/). If you're looking for 4096-RSA encruption then this package [RichardStyles/EloquentEncryption](https://github.com/RichardStyles/EloquentEncryption)
 
 ## Installation
 
-This package requires Laravel 8.x or higher.
+This package requires Laravel 12.x or higher.
 
 You can install the package via composer:
 
@@ -35,10 +35,30 @@ php artisan key:eloquent
 ### ⚠️ Please don't forget to back up your eloquent key
 If you re-run this command, you will lose access to any encrypted data!
 
+## Graceful Key Rotation
+
+Laravel 11+ introduced graceful encryption key rotation, and this package extends that feature! When rotating your encryption key, you can specify your previous keys to maintain access to data encrypted with old keys.
+
+### Setting Up Previous Keys
+
+Add your previous encryption keys to your `.env` file as a comma-separated list:
+
+```env
+ELOQUENT_KEY="base64:J63qRTDLub5NuZvP+kb8YIorGS6qFYHKVo6u7179stY="
+ELOQUENT_PREVIOUS_KEYS="base64:2nLsGFGzyoae2ax3EF2Lyq/hH6QghBGLIq5uL+Gp8/w=,base64:oldkey123..."
+```
+
+### How It Works
+
+- **Encryption**: Always uses the current `ELOQUENT_KEY`
+- **Decryption**: Tries the current key first, then falls back to previous keys in order
+- **No Downtime**: Users can access data encrypted with any key during rotation
+
+This allows you to rotate your encryption keys without disrupting your users or losing access to encrypted data!
 
 ## Usage
 
-This package leverages Laravel's own [custom casting](https://laravel.com/docs/8.x/eloquent-mutators#custom-casts) to encode/decode values.
+This package leverages Laravel's own [custom casting](https://laravel.com/docs/12.x/eloquent-mutators#custom-casts) to encode/decode values.
 
 ``` php
 <?php
@@ -68,10 +88,63 @@ class SalesData extends Model
 
 There are additional casts which will cast the decrypted value into a specific data type. If there is not one that you need, simply make a PR including sufficient testing.
 
+### Using `encryptUsing()` for Model-Level Encryption
+
+Laravel allows you to specify which encrypter instance a model should use via the `encryptUsing()` method. This is useful when you want all encrypted attributes on a model to use the AES encrypter instead of Laravel's default encrypter:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use RichardStyles\EloquentAES\EloquentAESFacade;
+
+class User extends Model
+{
+    /**
+     * The attributes that should be encrypted.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'ssn' => 'encrypted',
+        'credit_card' => 'encrypted',
+        'address' => 'encrypted:array',
+        'preferences' => 'encrypted:collection',
+        'metadata' => 'encrypted:object',
+    ];
+
+    /**
+     * Get the encrypter instance that should be used to encrypt attributes.
+     */
+    public static function encryptUsing()
+    {
+        return EloquentAESFacade::getFacadeRoot();
+    }
+}
+```
+
+With this approach, all `encrypted` casts will automatically use the AES-256-CBC key instead of your app key. You can use Laravel's built-in `encrypted` casts without needing to specify the custom cast classes.
+
 ### Testing
 
 ``` bash
 composer test
+```
+
+### Code Style
+
+This package uses [Laravel Pint](https://laravel.com/docs/pint) for code style formatting.
+
+To automatically fix code style issues:
+``` bash
+composer lint
+```
+
+To check for code style issues without fixing them:
+``` bash
+composer lint-test
 ```
 
 ### Changelog

@@ -13,11 +13,11 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/eloquentaes.php' => config_path('eloquentaes.php'),
+                __DIR__.'/../config/eloquentaes.php' => config_path('eloquentaes.php'),
             ], 'config');
 
             // Registering package commands.
@@ -33,7 +33,7 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/eloquentaes.php', 'eloquentaes');
+        $this->mergeConfigFrom(__DIR__.'/../config/eloquentaes.php', 'eloquentaes');
 
         $this->registerEncryptor();
         $this->registerOpisSecurityKey();
@@ -49,7 +49,20 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
         $this->app->singleton('eloquentaes', function ($app) {
             $config = $app->make('config')->get('eloquentaes');
 
-            return new Encrypter($this->parseKey($config), $config['cipher']);
+            $encrypter = new Encrypter($this->parseKey($config), $config['cipher']);
+
+            // Register previous keys for graceful key rotation
+            if (! empty($config['previous_keys']) && is_array($config['previous_keys'])) {
+                /** @var array<int, string> $previousKeys */
+                $previousKeys = array_map(
+                    fn ($key) => $this->parseKey(['key' => $key]),
+                    $config['previous_keys']
+                );
+
+                $encrypter->previousKeys($previousKeys);
+            }
+
+            return $encrypter;
         });
     }
 
@@ -72,7 +85,7 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
     /**
      * Extract the encryption key from the given configuration.
      *
-     * @param  array  $config
+     * @param  array<string, mixed>  $config
      * @return string
      *
      * @throws \RuntimeException
@@ -82,7 +95,7 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
         return tap($config['key'], function ($key) {
             if (empty($key)) {
                 throw new MissingAppKeyException(
-                    "No eloquent encryption key has been specified."
+                    'No eloquent encryption key has been specified.'
                 );
             }
         });
