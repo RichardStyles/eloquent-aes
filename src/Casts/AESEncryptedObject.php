@@ -12,13 +12,13 @@ class AESEncryptedObject extends AESEncrypted
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  string  $key
      * @param  mixed  $value
-     * @param  array  $attributes
-     * @return object
+     * @param  array<string, mixed>  $attributes
+     * @return object|null
      */
     public function get($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return;
+            return null;
         }
 
         $decoded = parent::get($model, $key, $value, $attributes);
@@ -37,13 +37,13 @@ class AESEncryptedObject extends AESEncrypted
      * @param  \Illuminate\Database\Eloquent\Model  $model
      * @param  string  $key
      * @param  mixed  $value
-     * @param  array  $attributes
-     * @return string
+     * @param  array<string, mixed>  $attributes
+     * @return string|null
      */
     public function set($model, $key, $value, $attributes)
     {
         if (is_null($value)) {
-            return;
+            return null;
         }
 
         $value = json_encode($value);

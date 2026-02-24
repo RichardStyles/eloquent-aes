@@ -36,7 +36,9 @@ class KeyGenerateCommand extends Command
         $key = $this->generateRandomKey();
 
         if ($this->option('show')) {
-            return $this->line('<comment>'.$key.'</comment>');
+            $this->line('<comment>'.$key.'</comment>');
+
+            return;
         }
 
         // Next, we will replace the application key in the environment file so it is
@@ -82,9 +84,9 @@ class KeyGenerateCommand extends Command
         return true;
     }
 
-    protected function environmentFileWithExists()
+    protected function environmentFileWithExists(): bool
     {
-        return preg_match(
+        return (bool) preg_match(
             $this->keyReplacementPattern(),
             file_get_contents($this->laravel->environmentFilePath())
         );

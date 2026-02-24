@@ -15,6 +15,7 @@
     ],
     "require-dev": {
         "laravel/pint": "^1.18",
+        "larastan/larastan": "^3.0",
         "orchestra/testbench": "^10.0|^11.0",
         "pestphp/pest": "^3.0",
         "pestphp/pest-plugin-laravel": "^3.0"
@@ -33,7 +34,8 @@
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "lint": "vendor/bin/pint",
-        "lint-test": "vendor/bin/pint --test"
+        "lint-test": "vendor/bin/pint --test",
+        "analyse": "vendor/bin/phpstan analyse"
     },
     "config": {
         "sort-packages": true,

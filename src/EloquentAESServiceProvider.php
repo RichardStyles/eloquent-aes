@@ -13,7 +13,7 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -52,12 +52,14 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
             $encrypter = new Encrypter($this->parseKey($config), $config['cipher']);
 
             // Register previous keys for graceful key rotation
-            if (! empty($config['previous_keys'])) {
-                $encrypter->previousKeys(
-                    collect($config['previous_keys'])
-                        ->map(fn ($key) => $this->parseKey(['key' => $key]))
-                        ->all()
+            if (! empty($config['previous_keys']) && is_array($config['previous_keys'])) {
+                /** @var array<int, string> $previousKeys */
+                $previousKeys = array_map(
+                    fn ($key) => $this->parseKey(['key' => $key]),
+                    $config['previous_keys']
                 );
+
+                $encrypter->previousKeys($previousKeys);
             }
 
             return $encrypter;
@@ -83,6 +85,7 @@ class EloquentAESServiceProvider extends EncryptionServiceProvider
     /**
      * Extract the encryption key from the given configuration.
      *
+     * @param  array<string, mixed>  $config
      * @return string
      *
      * @throws \RuntimeException
